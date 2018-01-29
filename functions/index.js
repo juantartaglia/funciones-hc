@@ -20,13 +20,15 @@ exports.updateSpool = functions.firestore.document('/buffer/{documentId}').onCre
     const fecha = event.data.data().fecha;
     const hora = event.data.data().hora;
     const tipoIn = event.data.data().tipoIn;
+    const spoolId = event.data.data().spoolId;
     const status = 0;
     console.log("Buffer Temp ",event.params.documentId,nroDoc);
     //let spoolRef = admin.firestore().collection("spool").add(nroDoc,nombre,profId,fecha,hora,status,tipoIn);
     //let deleteDoc = event.ref.doc.deleteDoc();
     console.log("Objeto a Eliminar ",event.params.documentId);
     console.log("Data to save : ",nroDoc,nombre,profId,fecha,hora,status,tipoIn);
-    //const deleteDoc = admin.firebase().collection('buffer').doc(event.params.documentId).delete();
+    const nuevoSpool = admin.firestore().collection('spool').doc().set({nroDoc,nombre,profId,fecha,hora,status,tipoIn,spoolId});
+    const deleteDoc = admin.firestore().collection('buffer').doc(event.params.documentId).delete();
     let documentRef = admin.firestore().collection('pacientes').where('nroDoc','==',nroDoc);
     return documentRef.get().then(ref =>{ if (!ref.exists){
         const nuevoPac = admin.firestore().collection('pacientes').doc(nroDoc).set({nroDoc,nombre,fechaNacimiento,institucion,nroAfiliado});
